@@ -1,31 +1,25 @@
 #!/bin/bash
-echo "🛡️ PhishDNS - Intelligence Platform"
-echo "==================================="
-echo ""
 
-# Crear directorios
-mkdir -p db logs
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Iniciar API
-echo "[*] Iniciando API server en puerto 5000..."
-python3 api/server.py &
-API_PID=$!
+echo "🛡️ Pish - Anti-Phishing Intelligence"
+echo "===================================="
 
-# Servir dashboard (usando python http.server)
-echo "[*] Iniciando Dashboard en puerto 8080..."
-cd dashboard
-python3 -m http.server 8080 &
-DASH_PID=$!
-cd ..
+# Verificar licencia
+python3 "$BASE_DIR/core/verify_license.py"
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "❌ No se pudo verificar la licencia."
+    echo "   Visitá https://tintin40498.github.io/pish/ para obtener una."
+    exit 1
+fi
 
 echo ""
-echo "✅ PhishDNS activo"
-echo "   Dashboard: http://localhost:8080"
-echo "   API: http://localhost:5000"
+echo "✅ Licencia válida. Iniciando Pish..."
 echo ""
-echo "Presiona Ctrl+C para detener"
 
-# Manejar cierre
-trap "kill $API_PID $DASH_PID 2>/dev/null; exit" INT
+# Iniciar API y dashboard
+python3 api/web_api.py &
+python3 -m http.server 8080 --directory dashboard &
 
 wait
