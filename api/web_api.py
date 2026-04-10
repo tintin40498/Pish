@@ -358,3 +358,19 @@ def home():
             "/api/v1/webhook/paypal"
         ]
     })
+
+# ========== SERVIR PÁGINAS WEB ==========
+from flask import render_template
+
+@app.route('/web/')
+@app.route('/web/<path:filename>')
+def serve_web(filename='index.html'):
+    try:
+        return render_template(filename)
+    except:
+        return render_template('index.html')
+
+# Redirigir la raíz a la web
+@app.route('/')
+def home_with_web():
+    return render_template('index.html')
