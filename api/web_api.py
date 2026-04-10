@@ -341,3 +341,20 @@ def index():
             '/api/v1/webhook/paypal'
         ]
     })
+
+# ========== RUTA RAÍZ PARA QUE NO DE 404 ==========
+@app.route('/')
+def home():
+    return jsonify({
+        "service": "Pish API",
+        "status": "operational",
+        "version": "1.0.0",
+        "endpoints": [
+            "/health",
+            "/api/v1/register",
+            "/api/v1/login",
+            "/api/v1/perfil",
+            "/api/v1/verificar_licencia",
+            "/api/v1/webhook/paypal"
+        ]
+    })
